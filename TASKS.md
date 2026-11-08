@@ -77,10 +77,11 @@ Started: 2026-11-08T01:41:06Z. Tool used: Qoder. Gemini planning material was su
 - Hosted delivery checkpoint: 2026-11-08T03:01:44Z. Total elapsed from start ≈ 1 hour 21 minutes, including account setup and authorization pauses; local implementation/verification alone was ≈ 22 minutes.
 
 ## Remaining before sending the proposal
-1. Commit and push the final TASKS.md/SUBMISSION.md/README.md updates (user authorization required).
-2. User confirms personal availability, timezone, and Upwork profile for the proposal.
-3. Share the hosted admin password (generated value in ignored `.env`) with the client privately; never in the repository.
-4. Optionally upgrade Railway before trial expiry for a lasting demo; the application itself is host-portable via the Dockerfile.
+1. User confirms personal availability, timezone, and Upwork profile for the proposal.
+2. Share the hosted admin password (generated value in ignored `.env`) with the client privately; never in the repository.
+3. Optionally upgrade Railway before trial expiry for a lasting demo; the application itself is host-portable via the Dockerfile.
+
+Final documentation was committed and pushed as `c3ab346` with user authorization; the automatic Railway redeploy reached SUCCESS with health 200, admin login 200, prior data intact, and the simulation still running.
 
 ## Next actions requiring user input or external access
 1. Authorize Railway's GitHub integration for `ashar-ops/back-in-stock-challenge`, then recheck source state before connecting/retrying.
