@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173b32">
+  <meta name="description" content="Discover everyday favorites and request a back-in-stock email with Restock.">
+  <title>Restock — Good things come back.</title>
+  <link rel="icon" href="/assets/brand.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script src="/assets/store.js" defer></script>
+</head>
+<body class="store-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="announcement">A considered collection. A little less missing out.</div>
+  <header class="site-header wrap">
+    <a class="brand" href="/" aria-label="Restock home"><img src="/assets/brand.svg" width="32" height="32" alt=""><span>restock<span class="brand-period">.</span></span></a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a class="nav-active" href="#collection">The collection</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="/embed">Alert form <span aria-hidden="true">↗</span></a>
+    </nav>
+    <a class="dashboard-link" href="/admin"><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#grid"></use></svg><span>Dashboard</span></a>
+  </header>
+
+  <main id="main">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="small-line"></span> Everyday, well considered</p>
+        <h1 id="hero-title">Good things<br>come <em>back.</em></h1>
+        <p class="hero-description">The pieces you reach for, again and again. Discover the collection and get an email when a favorite is back in stock.</p>
+        <div class="hero-actions"><a class="button button-primary" href="#collection">Find your next favorite <span aria-hidden="true">↗</span></a><a class="text-link" href="#how-it-works">A better way to wait <span aria-hidden="true">→</span></a></div>
+        <div class="hero-note"><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#bell"></use></svg><span>One request. One restock email. No newsletter.</span></div>
+      </div>
+      <div class="hero-art" aria-label="Illustration of thoughtfully designed everyday objects" role="img">
+        <div class="art-caption"><span class="eyebrow">Objects for the everyday</span><span class="art-edition">THE RESTOCK EDIT</span></div>
+        <svg class="still-life" viewBox="0 0 560 420" aria-hidden="true"><use href="/assets/brand.svg#still-life"></use></svg>
+        <div class="art-label"><span class="art-label-icon"><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#spark"></use></svg></span><div><strong>Some things are worth the wait.</strong><span>Save your place. Carry on with your day.</span></div></div>
+      </div>
+    </section>
+
+    <section class="collection-section" id="collection" aria-labelledby="collection-title">
+      <div class="wrap">
+        <div class="section-heading">
+          <div><p class="eyebrow">Fewer, better favorites</p><h2 id="collection-title">The collection<span class="heading-dot">.</span></h2></div>
+          <p class="section-description">Found your favorite? Select a piece<br>to set up your stock alert.</p>
+        </div>
+        <div class="collection-layout">
+          <div class="catalogue">
+            <div class="catalogue-toolbar"><div class="segmented-control" role="group" aria-label="Filter collection by availability"><button type="button" class="segment is-active" data-stock="all" aria-pressed="true">All pieces</button><button type="button" class="segment" data-stock="out" aria-pressed="false">Out of stock</button><button type="button" class="segment" data-stock="in" aria-pressed="false">In stock</button></div><span id="product-count" class="muted small" aria-live="polite">Loading collection…</span></div>
+            <div id="catalogue-message" class="catalogue-message" role="status"><span class="loading-ring" aria-hidden="true"></span><p>Finding your next favorite…</p></div>
+            <button id="catalogue-retry" class="button button-secondary retry-catalogue" type="button" hidden>Try loading again</button>
+            <div class="product-grid" id="product-grid" aria-busy="true"></div>
+            <p class="catalogue-footnote"><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#info"></use></svg>Availability is a snapshot. Stock can change before you return.</p>
+          </div>
+          <aside class="signup-panel" aria-labelledby="signup-title">
+            <div class="signup-panel-top"><span class="eyebrow">Your next good thing</span><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#arrow-down"></use></svg></div>
+            <div class="selected-product"><span class="selected-product-symbol"><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#box"></use></svg></span><div><h3 id="signup-title">Pick a piece, leave the rest to us.</h3><p id="selection-description">Select a product, or enter a SKU below.</p></div></div>
+            <iframe id="alert-frame" class="alert-frame" src="/embed" title="Request a back-in-stock email" loading="eager"></iframe>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="how-section wrap" id="how-it-works" aria-labelledby="how-title">
+      <div class="how-intro"><p class="eyebrow">Less checking. More living.</p><h2 id="how-title">A better way<br>to wait.</h2><p>Let your next favorite find its way back to you.</p></div>
+      <ol class="steps">
+        <li><span class="step-number">01</span><svg class="step-icon" aria-hidden="true"><use href="/assets/brand.svg#box"></use></svg><h3>Find your piece</h3><p>Choose from the collection, or enter the product’s SKU in the alert form.</p></li>
+        <li><span class="step-number">02</span><svg class="step-icon" aria-hidden="true"><use href="/assets/brand.svg#mail"></use></svg><h3>Leave your email</h3><p>Make a request for that specific product. You’re not joining a mailing list.</p></li>
+        <li><span class="step-number">03</span><svg class="step-icon" aria-hidden="true"><use href="/assets/brand.svg#bell"></use></svg><h3>Watch your inbox</h3><p>We’ll aim to email when stock is confirmed. An alert doesn’t reserve an item.</p></li>
+      </ol>
+    </section>
+    <section class="embed-banner wrap" aria-label="Standalone alert form"><div><span class="eyebrow">Small form. Thoughtful connection.</span><h2>Already know what you’re waiting for?</h2><p>Go straight to the alert form with your product SKU.</p></div><a class="button button-light" href="/embed">Open the alert form <span aria-hidden="true">↗</span></a></section>
+  </main>
+  <footer class="site-footer wrap"><a class="brand" href="/" aria-label="Restock home"><img src="/assets/brand.svg" width="27" height="27" alt=""><span>restock.</span></a><p>Good things. On your terms.</p><nav aria-label="Footer navigation"><a href="/embed">Alert form</a><a href="/admin">Merchant dashboard <span aria-hidden="true">↗</span></a></nav></footer>
+  <noscript><p class="noscript-note">JavaScript is needed to load the collection and send a stock alert request. Please enable it to continue.</p></noscript>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173b32">
+  <meta name="description" content="Request one email when your favorite product comes back in stock.">
+  <title>Your stock alert — Restock</title>
+  <link rel="icon" href="/assets/brand.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script src="/assets/embed.js" defer></script>
+</head>
+<body class="embed-page">
+  <header class="standalone-header"><a class="brand" href="/" aria-label="Restock home"><img src="/assets/brand.svg" width="32" height="32" alt=""><span>restock.</span></a><a class="text-link" href="/">Back to the collection <span aria-hidden="true">↗</span></a></header>
+  <main class="embed-main">
+    <div class="standalone-intro"><p class="eyebrow">A little less missing out</p><h1>Your favorite.<br>Your next <em>notification.</em></h1><p>Good things have a way of coming back.<br>Let’s make sure you hear about it.</p></div>
+    <section class="notification-card" aria-labelledby="form-title">
+      <div class="notification-header"><span class="notification-icon"><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#bell"></use></svg></span><div><h2 id="form-title">Worth the wait.</h2><p>An email when it’s back in stock.</p></div></div>
+      <form id="notification-form" method="post" action="/api/requests">
+        <div class="form-field"><label for="email">Email address</label><input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" maxlength="254" required aria-describedby="email-hint"><p class="field-hint" id="email-hint">Just the stock alert you asked for. No newsletter.</p></div>
+        <div class="form-field"><div class="label-line"><label for="sku">Product SKU</label><span class="optional-label">Product reference</span></div><input id="sku" name="sku" type="text" placeholder="Enter a product SKU" autocomplete="off" spellcheck="false" maxlength="64" required aria-describedby="sku-hint"><p class="field-hint" id="sku-hint">Selected from the collection, or entered by you.</p></div>
+        <div id="form-feedback" class="feedback" role="status" aria-live="polite" aria-atomic="true" hidden><strong id="feedback-title"></strong><p id="feedback-message"></p></div>
+        <button class="button button-primary notify-submit" id="notify-submit" type="submit"><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#bell"></use></svg><span id="notify-label">Notify me when it’s back</span><span class="loading-ring" aria-hidden="true" hidden></span></button>
+        <button class="form-reset" id="form-reset" type="reset">Clear email</button>
+      </form>
+      <p class="form-disclaimer"><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#shield"></use></svg><span>One notification per request. Stock can change, and an alert doesn’t reserve your item.</span></p>
+      <noscript><p class="feedback feedback-error">Please enable JavaScript to submit this form.</p></noscript>
+    </section>
+    <p class="embed-signature">A little patience, by <a href="/" target="_blank" rel="noopener">restock.</a></p>
+  </main>
+  <footer class="standalone-footer">Thoughtfully chosen. Worth waiting for.</footer>
+</body>
+</html>

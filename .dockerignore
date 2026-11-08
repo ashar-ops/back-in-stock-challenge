@@ -1,0 +1,14 @@
+.git
+.qoder
+.env
+.env.*
+.demo
+data
+node_modules
+coverage
+artifacts
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+*.log

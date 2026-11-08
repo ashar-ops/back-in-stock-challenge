@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173b32">
+  <title>Merchant dashboard — Restock</title>
+  <link rel="icon" href="/assets/brand.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script src="/assets/admin.js" defer></script>
+</head>
+<body class="admin-page">
+  <a class="skip-link" href="#main">Skip to dashboard</a>
+  <aside class="admin-sidebar">
+    <a class="brand brand-light" href="/" aria-label="Restock home"><img src="/assets/brand.svg" width="32" height="32" alt=""><span>restock.</span></a>
+    <div class="workspace-label"><span class="workspace-avatar">R</span><span><strong>Your workspace</strong><small>Merchant dashboard</small></span><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#lock"></use></svg></div>
+    <p class="sidebar-caption">WORKSPACE</p>
+    <nav class="admin-nav" aria-label="Dashboard navigation"><a class="is-current" href="/admin" aria-current="page"><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#grid"></use></svg>Overview<span class="nav-indicator" aria-hidden="true"></span></a><a href="#requests"><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#bell"></use></svg>Stock requests</a><a href="#activity"><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#activity"></use></svg>Stock activity</a><a href="/admin/email-preview" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#mail"></use></svg>Email preview <span class="push-right" aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></nav>
+    <div class="sidebar-bottom"><div class="sidebar-note"><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#spark"></use></svg><h2>Keep good things moving.</h2><p>Every request is someone looking forward to their next favorite.</p></div><a class="sidebar-shop" href="/">View storefront <span aria-hidden="true">↗</span></a><button id="logout" class="logout-button" type="button"><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#logout"></use></svg>Sign out</button></div>
+  </aside>
+  <div class="admin-shell">
+    <header class="admin-topbar"><div class="breadcrumb">Workspace <span aria-hidden="true">/</span> <strong>Overview</strong></div><div class="admin-user"><span class="secure-indicator"></span>Private workspace<span class="user-avatar" aria-hidden="true">R</span></div></header>
+    <main id="main" class="admin-main">
+      <div class="dashboard-heading"><div><p class="eyebrow">A little clarity for your day</p><h1>Your restock overview<span class="heading-dot">.</span></h1><p>Stay close to what your customers are waiting for.</p></div><div class="dashboard-actions"><button class="button button-secondary" id="refresh" type="button"><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#refresh"></use></svg><span id="refresh-label">Refresh data</span></button><span class="refresh-status" id="refresh-status" role="status">Waiting for first update</span></div></div>
+      <div id="admin-feedback" class="feedback" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+      <section class="stats-grid" aria-label="Request statistics">
+        <article class="stat-card"><div class="stat-label">Total requests<svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#layers"></use></svg></div><strong id="stat-total" class="stat-value">—</strong><span class="stat-description">All customer requests</span></article>
+        <article class="stat-card"><div class="stat-label">Waiting for stock<svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#clock"></use></svg></div><strong id="stat-waiting" class="stat-value">—</strong><span class="stat-description">Watching availability</span></article>
+        <article class="stat-card"><div class="stat-label">In progress<svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#activity"></use></svg></div><strong id="stat-progress" class="stat-value">—</strong><span id="stat-progress-detail" class="stat-description">Queued and retrying</span></article>
+        <article class="stat-card stat-notified"><div class="stat-label">Notified<svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#check-circle"></use></svg></div><strong id="stat-notified" class="stat-value">—</strong><span class="stat-description">Accepted by email provider</span></article>
+        <article class="stat-card"><div class="stat-label">Needs attention<svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#info"></use></svg></div><strong id="stat-attention" class="stat-value">—</strong><span class="stat-description">Review before retrying</span></article>
+      </section>
+
+      <section class="requests-panel" id="requests" aria-labelledby="requests-title">
+        <div class="panel-heading"><div><h2 id="requests-title">Stock alert requests <span class="count-pill" id="requests-total">—</span></h2><p>From “let me know” to a welcome email.</p></div><label class="auto-refresh"><input type="checkbox" id="auto-refresh" checked><span class="auto-dot" aria-hidden="true"></span>Auto-refresh · 15s</label></div>
+        <form class="table-filters" id="filters-form" role="search" aria-label="Search stock requests"><div class="search-field"><label class="sr-only" for="request-search">Search email or product SKU</label><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#search"></use></svg><input id="request-search" name="q" type="search" placeholder="Search email or product SKU…" maxlength="254" autocomplete="off"></div><div class="status-filter"><label for="status-filter">Status</label><select id="status-filter" name="status"><option value="">All statuses</option><option value="waiting">Waiting for stock</option><option value="queued">Queued</option><option value="retrying">Retrying</option><option value="notified">Notified</option><option value="attention">Needs attention</option></select></div><button class="button button-secondary filter-submit" type="submit">Search</button><button class="text-button" id="clear-filters" type="button" hidden>Clear filters</button></form>
+        <div class="table-wrapper" role="region" aria-label="Stock alert requests table, scroll horizontally to see all columns" tabindex="0"><table class="requests-table is-empty"><caption class="sr-only">Customer stock alert requests, their delivery status, and retry details</caption><thead><tr><th scope="col">Customer</th><th scope="col">Product SKU</th><th scope="col">Status</th><th scope="col">Requested</th><th scope="col">Notification / next step</th></tr></thead><tbody id="requests-body" aria-busy="true"><tr><td colspan="5"><div class="table-empty"><span class="loading-ring" aria-hidden="true"></span><h3>Loading your requests</h3><p>Getting the latest from your workspace.</p></div></td></tr></tbody></table></div>
+        <div class="table-footer"><p id="pagination-summary" role="status" aria-live="polite">Loading requests…</p><div class="pagination" aria-label="Request pagination"><button class="pagination-button" id="previous-page" type="button" aria-label="Previous page" disabled><span aria-hidden="true">←</span></button><span id="page-number">Page 1</span><button class="pagination-button" id="next-page" type="button" aria-label="Next page" disabled><span aria-hidden="true">→</span></button></div></div>
+      </section>
+
+      <div class="dashboard-bottom-grid">
+        <section class="activity-panel" id="activity" aria-labelledby="activity-title"><div class="panel-heading"><div><h2 id="activity-title">Recent stock activity</h2><p>Incoming stock events, most recent first.</p></div><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#activity"></use></svg></div><ul id="events-list" class="events-list" aria-busy="true"><li class="activity-empty">Loading stock activity…</li></ul><p class="panel-footnote">Events trigger a stock check. Reported quantities aren’t proof of availability.</p></section>
+        <section class="delivery-note" aria-labelledby="delivery-title"><span class="notification-icon"><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#mail"></use></svg></span><p class="eyebrow">The other side of the alert</p><h2 id="delivery-title">A thoughtful note.<br>A reason to come back.</h2><p>Preview the email your customers receive when their requested product is available.</p><a class="text-link" href="/admin/email-preview" target="_blank" rel="noopener">Preview notification email <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a><span class="delivery-note-foot">An accepted email isn’t a guarantee of inbox delivery.</span></section>
+      </div>
+      <footer class="admin-footer"><span>Restock · Considered commerce</span><span>All times shown in your local timezone.</span></footer>
+      <noscript><p class="feedback feedback-error">Please enable JavaScript to view and manage the dashboard.</p></noscript>
+    </main>
+  </div>
+  <dialog id="retry-dialog" class="retry-dialog" aria-labelledby="retry-title" aria-describedby="retry-description"><div class="dialog-content"><span class="notification-icon"><svg class="icon" aria-hidden="true"><use href="/assets/brand.svg#refresh"></use></svg></span><h2 id="retry-title">Retry this notification?</h2><p id="retry-description">Review the delivery issue before requesting another attempt. A retry may be declined if it can’t be performed safely.</p><div class="retry-request-summary"><strong id="retry-customer"></strong><span id="retry-sku"></span></div><p id="retry-error-detail" class="retry-error-detail"></p><div id="retry-feedback" class="feedback feedback-error" role="alert" hidden></div><div class="dialog-actions"><button id="cancel-retry" class="button button-secondary" type="button">Cancel</button><button id="confirm-retry" class="button button-primary" type="button">Confirm retry</button></div></div></dialog>
+</body>
+</html>
