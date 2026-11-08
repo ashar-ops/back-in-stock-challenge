@@ -59,7 +59,7 @@ docker build -t restock .
 docker run --name restock -p 3000:3000 --env-file .env -v restock-data:/app/data restock
 ```
 
-It also starts with only the six required environment variables; no migration command, npm installation, or separate database is needed. The container runs as the non-root `node` user and honours `PORT`. The declared data volume survives a restart; use the named volume shown above to preserve state when replacing a container. SQLite needs a local persistent filesystem; do not use a network filesystem or an ephemeral serverless host.
+It also starts with only the six required environment variables; no migration command, npm installation, or separate database is needed. The container runs as the non-root `node` user and honours `PORT`. The named volume shown above preserves state across restarts and container replacement. SQLite needs a local persistent filesystem; do not use a network filesystem or an ephemeral serverless host.
 
 For a host-assigned port, expose that port rather than assuming 3000. The image health check uses the configured port and `/healthz`.
 
@@ -91,6 +91,8 @@ One container is the intended deployment. SQLite claims protect concurrent worke
 ## Deployment and submission
 
 Use a persistent Docker host such as Railway, Render with a persistent disk, or a VPS. Configure all required variables, mount the persistent directory at `/app/data`, set `DATA_DIR=/app/data`, set `PUBLIC_URL` to the real HTTPS origin, and use `/healthz` as the health check. Save that live origin in the client sandbox dashboard, then exercise restocks, duplicate events, phantom events, and injected email failures. Do not use the local demo credentials in the hosted harness.
+
+Render can build the Dockerfile directly from the GitHub repository; Docker does not need to be installed locally. Use paid web-service compute with a persistent disk and one instance. Render Free is not suitable for this SQLite application: it cannot attach a persistent disk, loses filesystem changes on restart/redeploy/spin-down, and suspends the retry worker while idle. A free preview must not be presented as a durable deployment.
 
 See TASKS.md for actual verification and remaining delivery work. A repository URL and durable live URL must be created with the user's accounts; neither should be fabricated. The job posting expects them even though the technical brief calls the live URL optional.
 

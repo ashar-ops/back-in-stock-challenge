@@ -12,11 +12,12 @@ Started: 2026-11-08T01:41:06Z. Tool used: Qoder. Gemini planning material was su
 - [x] Exercise UI in a real browser at desktop and mobile sizes.
 - [x] Package Docker build and deployment instructions.
 - [ ] Verify Docker build/run with durable storage (Docker runtime unavailable).
-- [ ] Publish repository and deploy a persistent live instance (account access required).
-- [ ] Connect and validate the hosted client harness (hosted instance and candidate credentials required).
+- [x] Publish repository (user pushed initial commit; remote main verified).
+- [ ] Deploy a persistent live instance (Render hosting/storage decision and account access required).
+- [ ] Connect and validate the hosted client harness (stock authentication verified; hosted instance and delivery validation pending).
 - [x] Prepare honest submission details and final verification report.
 
-## Environment findings
+## Initial local implementation environment (historical; see hosted delivery preparation below)
 - The workspace began empty and was not a Git repository.
 - Available shell runtime: Node v26.13.0, npm 11.20.0; built-in SQLite works.
 - gh, docker, railway, cloudflared, and ngrok are not currently on PATH.
@@ -37,11 +38,30 @@ Started: 2026-11-08T01:41:06Z. Tool used: Qoder. Gemini planning material was su
 - The in-app browser had no visible screenshot surface, so visual verification used real headless Chrome through temporary npm-exec Playwright tooling instead. No runtime dependency was added.
 - Dockerfile is provided and its Node version/API compatibility was tested, but no Docker build/run has been performed because a Docker runtime is unavailable.
 
-## Next actions requiring external access
-1. Authorize a GitHub account/repository and a persistent Docker host (Railway, Render with a disk, or a VPS). No remote repo has been created and no commit/push has been made.
-2. Obtain the user's candidate credentials from the hosted challenge dashboard; keep these and its private URL out of source control.
-3. Build/run the supplied image, mount `/app/data`, set all required environment variables and the real HTTPS `PUBLIC_URL`, and deploy.
-4. Register that live origin in the hosted harness, repeat the fault/restart checks there, and finish SUBMISSION.md with actual URLs and total time.
+## Hosted delivery preparation — 2026-11-08
+- The user published https://github.com/ashar-ops/back-in-stock-challenge; remote `main` matches local commit `ff77a3fe9ee12191aba62f1ccf5c9f6462a55e94`.
+- The user created a Render account and populated ignored `.env`. All six required settings pass configuration validation, and authenticated hosted stock catalogue access returns 20 products. Email credentials and webhook integration have not yet been validated against the hosted harness.
+- `.env` is untracked and ignored. None of the configured stock/email API keys or webhook secret appear in the 35 tracked files checked.
+- Fresh verification passed all 50 integration tests and JavaScript syntax checks.
+- With the user's explicit authorization, the public demo admin password was replaced in ignored `.env` with a cryptographically generated 32-character password; the value was not printed. `PUBLIC_URL` must still change to the actual hosted HTTPS origin.
+- Render documentation confirms it builds the repository Dockerfile remotely; local Docker installation is not required. No Docker build has yet been performed.
+- Render Free cannot attach a persistent disk, loses local SQLite changes on restart/redeploy/spin-down, and spins down while idle. It cannot satisfy this application's durability and independent-retry requirements. Paid compute plus a persistent disk, or another suitable host, needs the user's decision before proceeding.
+- The available browser controls target Qoder's separate in-app browser, not the user's signed-in Chrome. Render navigation timed out and subsequent snapshots exposed only an empty page root, so authenticated dashboard access is not established.
+- The user selected Railway, created an account, and completed the official CLI's browser sign-in. CLI tooling uses temporary `npm exec` without adding a project dependency. The user confirmed sign-in was done.
+- Account inspection showed $5 in unused trial credit, 30 trial days remaining, no usage subscription, and no existing projects. No paid plan was activated. Trial expiration and possible outbound-network restrictions still need accounting for before final delivery.
+- Created Railway project `back-in-stock-challenge` (`fa7efa58-398c-4f65-813e-315b59dda5bc`), production environment `416d1e5c-b0b7-40b7-b6b0-7b8374a7f628`, and service `restock` (`decbea05-41f5-42ee-852a-2d31f7a8f166`) using the trial.
+- Attached 500 MB persistent volume `restock-volume` (`c027a8fb-b0ca-4b38-bb18-1a91d303d632`) at `/app/data`; Railway reports it READY.
+- Reserved https://restock-production-27d9.up.railway.app on port 3000. This is a reserved address, NOT yet a working live application.
+- Imported required environment variables privately, without printing secret values. Set hosted `PUBLIC_URL`, `DATA_DIR=/app/data`, one replica, sleep disabled, `/healthz`, and Dockerfile detection.
+- Railway mounts volumes as root. Configured `RAILWAY_RUN_UID=0` with startup `sh -c 'chown node:node /app/data && exec su -s /bin/sh -c "exec node src/server.js" node'` so only volume initialization runs as root and the app drops to the node user. This startup still requires actual runtime verification.
+- Connecting the GitHub source initially failed with `User does not have access to the repo`; after the user authorized Railway's GitHub integration, the source connected to `ashar-ops/back-in-stock-challenge` main and triggered deployment `c90bdefb-f4dc-4d55-acc0-9bfa6e96d9d8`.
+- That build FAILED: Railway's builder rejects the Dockerfile `VOLUME` instruction ("docker VOLUME at Line 9 is not supported, use Railway Volumes"). Removed the `VOLUME` declaration locally; named-volume `docker run` behaviour is unchanged. User authorized committing and pushing the fix so Railway can rebuild.
+
+## Next actions requiring user input or external access
+1. Authorize Railway's GitHub integration for `ashar-ops/back-in-stock-challenge`, then recheck source state before connecting/retrying.
+2. Have Railway build/run the supplied Dockerfile without installing Docker locally; verify mounted storage write permissions, application UID, health, sandbox connectivity, and no sleep.
+3. Register the real working origin in the hosted harness, verify email credentials/webhook configuration, and repeat fault/restart checks including persistent data across container replacement.
+4. Account for trial expiration and confirm any paid costs before upgrading. Finish SUBMISSION.md with actual working URLs and total time.
 
 ## Local handoff
 - Start again with `npm run demo`; the current demo is running at http://localhost:3000.
