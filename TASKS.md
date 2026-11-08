@@ -11,10 +11,10 @@ Started: 2026-11-08T01:41:06Z. Tool used: Qoder. Gemini planning material was su
 - [x] Verify automated concurrency, failure, and restart scenarios.
 - [x] Exercise UI in a real browser at desktop and mobile sizes.
 - [x] Package Docker build and deployment instructions.
-- [ ] Verify Docker build/run with durable storage (Docker runtime unavailable).
+- [x] Verify Docker build/run with durable storage (built and run by Railway; restart and container-replacement persistence verified; no local Docker installed).
 - [x] Publish repository (user pushed initial commit; remote main verified).
-- [ ] Deploy a persistent live instance (Render hosting/storage decision and account access required).
-- [ ] Connect and validate the hosted client harness (stock authentication verified; hosted instance and delivery validation pending).
+- [x] Deploy a persistent live instance (Railway trial, one replica, persistent volume, sleep disabled).
+- [x] Connect and validate the hosted client harness (app URL saved; phantom, duplicate, burst, failure-recovery, and auth checks passed).
 - [x] Prepare honest submission details and final verification report.
 
 ## Initial local implementation environment (historical; see hosted delivery preparation below)
@@ -55,7 +55,32 @@ Started: 2026-11-08T01:41:06Z. Tool used: Qoder. Gemini planning material was su
 - Imported required environment variables privately, without printing secret values. Set hosted `PUBLIC_URL`, `DATA_DIR=/app/data`, one replica, sleep disabled, `/healthz`, and Dockerfile detection.
 - Railway mounts volumes as root. Configured `RAILWAY_RUN_UID=0` with startup `sh -c 'chown node:node /app/data && exec su -s /bin/sh -c "exec node src/server.js" node'` so only volume initialization runs as root and the app drops to the node user. This startup still requires actual runtime verification.
 - Connecting the GitHub source initially failed with `User does not have access to the repo`; after the user authorized Railway's GitHub integration, the source connected to `ashar-ops/back-in-stock-challenge` main and triggered deployment `c90bdefb-f4dc-4d55-acc0-9bfa6e96d9d8`.
-- That build FAILED: Railway's builder rejects the Dockerfile `VOLUME` instruction ("docker VOLUME at Line 9 is not supported, use Railway Volumes"). Removed the `VOLUME` declaration locally; named-volume `docker run` behaviour is unchanged. User authorized committing and pushing the fix so Railway can rebuild.
+- That build FAILED: Railway's builder rejects the Dockerfile `VOLUME` instruction ("docker VOLUME at Line 9 is not supported, use Railway Volumes"). Removed the `VOLUME` declaration; named-volume `docker run` behaviour is unchanged. With user authorization, committed and pushed the fix as `814a227d4d62f3c0b6976a8fe8c7df996c7aa04b`; Railway auto-deployed it as `b4a9a921-cc7b-4461-9f36-429d4cb9ac86` with status SUCCESS. This is a real host-side Docker build of the repository Dockerfile; no local Docker was installed or used.
+- Live verification so far: https://restock-production-27d9.up.railway.app serves the storefront and `/healthz` (200). `/api/catalog` returns all 20 sandbox products, proving trial outbound HTTPS to the client harness works. Startup logs show the app listening with data directory `/app/data`; the root-only volume chown plus `su node` startup succeeded (a failure there would crash the container).
+- Hosted admin login with the generated password returns 200 with Secure+HttpOnly cookie; authenticated `/api/admin/requests` works and unauthenticated access returns 401.
+- Durability smoke test: created marked request `41f39863-049b-4d30-8199-dd1658860993` (`persistence-check@example.com`, `PERSIST-CHECK`), restarted the Railway service, and confirmed the same request survived in waiting state. Volume file browsing was not used because it requires registering SSH keys on the account; functional restart evidence was used instead.
+- Live browser verification (Qoder in-app browser): hosted storefront renders the real 20-product catalogue with live stock states; `/embed?sku=TEE-ORG-WHT-M` prefills the SKU, a real form submission succeeded ("Your request is in"), an immediate repeat showed the duplicate message, and no console errors were logged. Test recipient: `hosted-browser-check@example.com`.
+- Still pending: the user's private hosted-sandbox dashboard link (`/c/<token>`) is needed to save the app URL and inject email failures; hosted webhook/email fault checks and container-replacement persistence follow.
+
+## Hosted harness verification — 2026-11-08 (live Railway instance)
+- The user provided the private candidate dashboard link; it is stored only in ignored `.demo/hosted-dashboard.url`. Saved `https://restock-production-27d9.up.railway.app` as the candidate app URL (303, visible on dashboard).
+- Wrong webhook secret rejected with 401 by the live app.
+- Phantom restock: subscribed `phantom-check@example.com` to sold-out `TEE-ORG-WHT-M`; harness phantom event claimed quantity 12 and was accepted (200), but the request stayed waiting with 0 attempts and no email appeared in the harness inbox.
+- Duplicate webhook: `duplicate-check@example.com` / `HOOD-FLC-GRY-M`; harness restock delivered the same event twice concurrently (both 200); exactly one accepted email, request notified after 1 attempt.
+- Eight concurrent identical webhooks for `burst-check@example.com` / `KNF-CHF-20`: all returned 200, exactly one `duplicate:false`, one accepted email, notified after 1 attempt.
+- Email failure recovery (controlled): stopped the simulation, injected two HTTP 500 failures, subscribed `retry2-check@example.com` to `TOTE-CNV-NAT`, restocked via harness. Result: 3 attempts, two `failed (injected 500)` inbox rows, exactly one accepted email, notified timestamp `2026-11-08T02:59:35.497Z`, last error cleared.
+- Observation: the sandbox simulation had been running and its own customers consumed an earlier failure injection; two simulated recipients each show a failed then accepted email, an unplanned but consistent recovery demonstration. The controlled rerun above is the attributable evidence.
+- Pre-replacement snapshot: 15 requests (11 notified, 4 waiting, 0 attention). Container replacement deployment `3fc78f1e-cfbf-4c0a-8b20-860ebac16eb0` reached SUCCESS; afterwards all 15 request IDs and the exact stats (11 notified, 4 waiting) were still present, proving SQLite durability across container replacement on the Railway volume.
+- Hosted mobile verification in real headless Chrome: storefront (20 products), embed with prefilled SKU, and admin login have no page-level horizontal overflow at 390px and 320px, with zero page errors.
+- The sandbox store simulation was restarted and is running (about every 30s), so the live instance receives ongoing realistic traffic.
+- Railway trial usage at checkpoint: under $0.01 consumed of the $5 grant; no paid plan. Trial expires 30 days after 2026-11-08; the client should be told hosting is a trial unless the user upgrades.
+- Hosted delivery checkpoint: 2026-11-08T03:01:44Z. Total elapsed from start ≈ 1 hour 21 minutes, including account setup and authorization pauses; local implementation/verification alone was ≈ 22 minutes.
+
+## Remaining before sending the proposal
+1. Commit and push the final TASKS.md/SUBMISSION.md/README.md updates (user authorization required).
+2. User confirms personal availability, timezone, and Upwork profile for the proposal.
+3. Share the hosted admin password (generated value in ignored `.env`) with the client privately; never in the repository.
+4. Optionally upgrade Railway before trial expiry for a lasting demo; the application itself is host-portable via the Dockerfile.
 
 ## Next actions requiring user input or external access
 1. Authorize Railway's GitHub integration for `ashar-ops/back-in-stock-challenge`, then recheck source state before connecting/retrying.

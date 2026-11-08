@@ -2,6 +2,8 @@
 
 A back-in-stock alert tool with a storefront, an iframe-ready signup form, a private operations dashboard, and responsive HTML emails. Node.js 24.13+; no runtime npm dependencies or external database.
 
+Live demo: https://restock-production-27d9.up.railway.app (hosted on a Railway trial with a persistent volume; admin password shared privately with the reviewer).
+
 ## Run locally
 
 ```sh
